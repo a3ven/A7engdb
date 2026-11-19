@@ -2,128 +2,260 @@
 <html lang="fa" dir="rtl">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#000000">
 <title>دیتابیس مهندسین</title>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/rastikerdar/vazirmatn@v33.003/Vazirmatn-font-face.css">
 <style>
 :root{
-  --bg:#f5f7fa;--card:#fff;--ink:#17212b;--muted:#6b7785;--line:#e3e8ee;
-  --brand:#1f6feb;--brand-ink:#fff;--soft:#eaf2ff;--ok:#1a7f4b;--danger:#c93c3c;
+  --bg:#000;--card:#1c1c1e;--card2:#2c2c2e;--ink:#fff;--muted:#8e8e93;--line:#38383a;
+  --blue:#0a84ff;--red:#ff453a;--green:#30d158;--bar:rgba(44,44,46,.78);--barsel:#0b0b0c;
 }
-@media (prefers-color-scheme:dark){
-  :root{--bg:#0f141a;--card:#171e26;--ink:#e8edf2;--muted:#8a97a5;--line:#27303a;--soft:#16263d;--brand:#4c8dff}
+@media (prefers-color-scheme:light){
+  :root{--bg:#f2f2f7;--card:#fff;--card2:#e9e9ee;--ink:#000;--muted:#6c6c70;--line:#d9d9de;--blue:#007aff;--red:#ff3b30;--bar:rgba(255,255,255,.78);--barsel:#e4e4ea}
 }
-*{box-sizing:border-box}
-body{margin:0;background:var(--bg);color:var(--ink);font-family:Vazirmatn,Tahoma,system-ui,sans-serif;font-size:15px;line-height:1.7}
-.wrap{max-width:1100px;margin:0 auto;padding:16px}
-h1{font-size:20px;margin:8px 0 2px}
-.sub{color:var(--muted);font-size:13px;margin-bottom:14px}
-.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:14px;margin-bottom:12px}
-#drop{border:2px dashed var(--line);border-radius:14px;padding:34px 16px;text-align:center;cursor:pointer;transition:.15s}
-#drop.over,#drop:hover{border-color:var(--brand);background:var(--soft)}
-#drop b{display:block;font-size:16px;margin-bottom:4px}
-#drop span{color:var(--muted);font-size:13px}
-.privacy{color:var(--ok);font-size:12.5px;margin-top:10px}
-button,select,input{font:inherit;color:inherit}
-button{background:var(--brand);color:var(--brand-ink);border:0;border-radius:10px;padding:8px 14px;cursor:pointer}
-button.ghost{background:transparent;color:var(--ink);border:1px solid var(--line)}
-button.danger{background:transparent;color:var(--danger);border:1px solid var(--line)}
-button:disabled{opacity:.4;cursor:default}
-input[type=search],select{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:8px 12px;min-width:0}
-input[type=search]{flex:1 1 240px}
-.bar{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
-.chk{display:flex;gap:6px;align-items:center;color:var(--muted);font-size:13px;white-space:nowrap}
-.stats{color:var(--muted);font-size:13px;margin:10px 2px}
-.tw{overflow-x:auto;border:1px solid var(--line);border-radius:12px;background:var(--card)}
-table{border-collapse:collapse;width:100%;min-width:640px}
-th,td{padding:9px 12px;text-align:right;border-bottom:1px solid var(--line);white-space:nowrap}
-th{position:sticky;top:0;background:var(--soft);font-weight:600;font-size:13px;cursor:pointer;user-select:none}
-th.sorted::after{content:" ▾"} th.sorted.asc::after{content:" ▴"}
-tr:last-child td{border-bottom:0}
-td.num{direction:ltr;text-align:right;font-variant-numeric:tabular-nums}
-td a{color:var(--brand);text-decoration:none}
-td.empty{color:var(--muted)}
-mark{background:#ffe08a;color:#000;border-radius:3px;padding:0 1px}
-.pager{display:flex;gap:8px;justify-content:center;align-items:center;margin:14px 0;flex-wrap:wrap}
-.pager input{width:70px;text-align:center;padding:6px;border:1px solid var(--line);border-radius:8px;background:var(--card)}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;background:var(--bg);color:var(--ink)}
+body{font-family:Vazirmatn,-apple-system,"SF Pro",Tahoma,system-ui,sans-serif;font-size:17px;line-height:1.55;
+  padding:env(safe-area-inset-top) 0 0}
+button,input,select{font:inherit;color:inherit;border:0;background:none}
+button{cursor:pointer}
 .hidden{display:none!important}
-.toast{position:fixed;bottom:18px;left:50%;transform:translateX(-50%);background:#17212b;color:#fff;padding:8px 16px;border-radius:999px;font-size:13px;opacity:0;transition:.2s;pointer-events:none}
-.toast.show{opacity:1}
-@media (max-width:600px){th,td{padding:8px}}
+.wrap{max-width:640px;margin:0 auto;padding:12px 16px 140px}
+
+/* top bar */
+.top{display:flex;justify-content:space-between;align-items:center;height:56px}
+.pill-btn{width:48px;height:48px;border-radius:50%;background:var(--card);display:grid;place-items:center;transition:.15s}
+.pill-btn:active{background:var(--card2)}
+.pill-btn svg{width:22px;height:22px}
+.navpill{height:48px;border-radius:24px;background:var(--card);display:flex;align-items:center;padding:0 6px}
+.navpill button{width:44px;height:44px;display:grid;place-items:center}
+.navpill button:disabled{opacity:.3}
+.navpill svg{width:22px;height:22px}
+h1{font-size:40px;font-weight:800;margin:10px 4px 14px;letter-spacing:-.5px;line-height:1.2}
+
+/* search */
+.search{display:flex;align-items:center;gap:10px;background:var(--card);border-radius:26px;padding:0 16px;height:52px;margin-bottom:6px}
+.search svg{width:22px;height:22px;color:var(--muted);flex:none}
+.search input{flex:1;min-width:0;height:100%;outline:0;font-size:17px}
+.search input::placeholder{color:var(--muted)}
+.search .x{width:22px;height:22px;border-radius:50%;background:var(--muted);color:var(--bg);display:grid;place-items:center;font-size:14px;line-height:1}
+
+/* sections */
+.sec{display:flex;align-items:center;justify-content:space-between;margin:26px 8px 10px;font-size:22px;font-weight:700}
+.sec svg{width:20px;height:20px;color:var(--muted)}
+.group{background:var(--card);border-radius:28px;padding:6px 0;overflow:hidden}
+.row{display:flex;align-items:center;gap:14px;padding:0 20px;min-height:68px;width:100%;text-align:right;position:relative}
+.row:active{background:var(--card2)}
+.row+.row::before{content:"";position:absolute;top:0;inset-inline:68px 20px;height:1px;background:var(--line)}
+.row.plain+.row.plain::before{inset-inline:20px}
+.row .ic{width:38px;height:38px;flex:none;display:grid;place-items:center;color:var(--blue)}
+.row .ic svg{width:28px;height:28px}
+.row .t{flex:1;min-width:0}
+.row .t b{display:block;font-weight:500;font-size:18px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.row .t small{display:block;color:var(--muted);font-size:14px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.row .cnt{color:var(--muted);font-size:16px}
+.row .chev{width:18px;height:18px;color:var(--muted);flex:none}
+.row.danger .t b,.row.danger .ic{color:var(--red)}
+.dot{width:28px;height:28px;border-radius:50%;flex:none;margin:0 5px}
+.dot.ring{border:2.5px solid var(--muted);background:none}
+.av{width:44px;height:44px;border-radius:50%;flex:none;display:grid;place-items:center;font-weight:700;font-size:17px;color:#fff}
+.nm{color:var(--muted)}
+mark{background:#ffd60a;color:#000;border-radius:4px;padding:0 1px}
+
+/* switch */
+.sw{position:relative;width:51px;height:31px;flex:none}
+.sw input{position:absolute;inset:0;opacity:0;width:100%;height:100%;margin:0;cursor:pointer;z-index:1}
+.sw i{position:absolute;inset:0;background:var(--card2);border-radius:20px;transition:.2s}
+.sw i::after{content:"";position:absolute;top:2px;inset-inline-start:2px;width:27px;height:27px;border-radius:50%;background:#fff;box-shadow:0 2px 5px rgba(0,0,0,.35);transition:.2s}
+.sw input:checked+i{background:var(--green)}
+.sw input:checked+i::after{transform:translateX(-20px)}
+
+/* chips & stats */
+.chips{display:flex;gap:8px;flex-wrap:wrap;margin:10px 2px 4px}
+.chip{display:inline-flex;align-items:center;gap:6px;background:var(--card);border-radius:20px;padding:5px 8px 5px 14px;font-size:15px}
+.chip b{width:22px;height:22px;border-radius:50%;background:var(--card2);display:grid;place-items:center;font-size:13px;font-weight:400}
+.stats{color:var(--muted);font-size:14px;margin:12px 10px 8px}
+.more{display:block;margin:14px auto 0;background:var(--card);border-radius:22px;padding:11px 26px;color:var(--blue);font-weight:600}
+.empty{text-align:center;color:var(--muted);padding:48px 20px}
+
+/* tab bar */
+.tabs{position:fixed;bottom:calc(14px + env(safe-area-inset-bottom));left:50%;transform:translateX(-50%);
+  display:flex;gap:4px;padding:5px;border-radius:40px;background:var(--bar);
+  -webkit-backdrop-filter:blur(24px) saturate(1.6);backdrop-filter:blur(24px) saturate(1.6);
+  box-shadow:0 8px 30px rgba(0,0,0,.35);z-index:20}
+.tabs button{display:flex;flex-direction:column;align-items:center;gap:2px;width:96px;height:62px;border-radius:32px;justify-content:center;color:var(--ink);font-size:13px;font-weight:600;transition:.2s}
+.tabs button svg{width:28px;height:28px}
+.tabs button.on{background:var(--barsel);color:var(--blue)}
+
+/* sheet */
+.scrim{position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:30;opacity:0;pointer-events:none;transition:.2s}
+.scrim.on{opacity:1;pointer-events:auto}
+.sheet{position:fixed;left:0;right:0;bottom:0;z-index:31;max-width:640px;margin:0 auto;background:var(--card);border-radius:30px 30px 0 0;
+  padding:12px 16px calc(24px + env(safe-area-inset-bottom));transform:translateY(105%);transition:.28s cubic-bezier(.2,.8,.2,1)}
+.sheet.on{transform:none}
+.grab{width:40px;height:5px;border-radius:3px;background:var(--line);margin:0 auto 14px}
+.sheet .av{width:76px;height:76px;font-size:30px;margin:0 auto 8px}
+.sheet h2{text-align:center;margin:0;font-size:22px}
+.sheet .sub{text-align:center;color:var(--muted);margin-bottom:16px}
+.acts{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:14px}
+.acts a,.acts button{background:var(--card2);border-radius:18px;padding:12px 4px;text-align:center;color:var(--blue);font-size:14px;text-decoration:none;display:flex;flex-direction:column;align-items:center;gap:2px}
+.acts svg{width:24px;height:24px}
+.kv{background:var(--bg);border-radius:20px;padding:4px 16px}
+.kv div{display:flex;justify-content:space-between;gap:12px;padding:11px 0;border-bottom:1px solid var(--line)}
+.kv div:last-child{border:0}
+.kv span{color:var(--muted)}
+.kv b{font-weight:500;direction:ltr;text-align:left}
+.kv b.rtl{direction:rtl}
+.opt{display:flex;justify-content:space-between;align-items:center;width:100%;padding:15px 8px;border-bottom:1px solid var(--line);font-size:18px}
+.opt:last-child{border:0}
+.opt em{color:var(--blue);font-style:normal}
+
+/* loader */
+.drop{border:2px dashed var(--line);border-radius:28px;padding:44px 20px;text-align:center;cursor:pointer;margin-top:8px}
+.drop:active,.drop.over{border-color:var(--blue);background:var(--card)}
+.drop b{display:block;font-size:19px;margin:6px 0}
+.drop span{color:var(--muted);font-size:14px}
+.drop svg{width:54px;height:54px;color:var(--blue)}
+.lock{color:var(--green);font-size:14px;text-align:center;margin:16px 6px}
+.msg{text-align:center;color:var(--muted);font-size:14px}
+.toast{position:fixed;bottom:110px;left:50%;transform:translateX(-50%) translateY(10px);background:var(--card2);color:var(--ink);padding:10px 18px;border-radius:24px;font-size:15px;opacity:0;transition:.2s;pointer-events:none;z-index:40}
+.toast.show{opacity:1;transform:translateX(-50%)}
 </style>
 </head>
 <body>
-<div class="wrap">
-  <h1>دیتابیس مهندسین</h1>
-  <div class="sub">جستجو، فیلتر و خروجی گرفتن از فایل اکسل دیتابیس</div>
+<svg width="0" height="0" style="position:absolute">
+  <defs>
+    <symbol id="i-search" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.6-3.6"/></symbol>
+    <symbol id="i-chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="m15 5-7 7 7 7"/></symbol>
+    <symbol id="i-down" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></symbol>
+    <symbol id="i-dots" viewBox="0 0 24 24" fill="currentColor"><circle cx="5" cy="12" r="1.8"/><circle cx="12" cy="12" r="1.8"/><circle cx="19" cy="12" r="1.8"/></symbol>
+    <symbol id="i-folder" viewBox="0 0 24 24" fill="currentColor"><path d="M3 7a2 2 0 0 1 2-2h4.2c.5 0 1 .2 1.4.6L12 7h7a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V7Z"/></symbol>
+    <symbol id="i-list" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M4 7h16M4 12h16M4 17h10"/></symbol>
+    <symbol id="i-doc" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8l-5-5Z"/><path d="M14 3v5h5"/></symbol>
+    <symbol id="i-phone" viewBox="0 0 24 24" fill="currentColor"><path d="M6.6 3h3l1.4 4-2 1.4a11 11 0 0 0 6.6 6.6L17 13l4 1.4v3A2.6 2.6 0 0 1 18.4 20 15.4 15.4 0 0 1 4 5.6 2.6 2.6 0 0 1 6.6 3Z"/></symbol>
+    <symbol id="i-msg" viewBox="0 0 24 24" fill="currentColor"><path d="M4 5h16a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2h-8l-5 4v-4H4a2 2 0 0 1-2-2V7a2 2 0 0 1 2-2Z"/></symbol>
+    <symbol id="i-copy" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="11" height="11" rx="2.5"/><path d="M5 15V6a2 2 0 0 1 2-2h9"/></symbol>
+    <symbol id="i-share" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 15V3m0 0L8 7m4-4 4 4"/><path d="M5 12v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-7"/></symbol>
+    <symbol id="i-swap" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 4v14m0 0-3-3m3 3 3-3M17 20V6m0 0-3 3m3-3 3 3"/></symbol>
+    <symbol id="i-trash" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7h16M10 11v6M14 11v6M6 7l1 12a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2l1-12M9 7V4h6v3"/></symbol>
+    <symbol id="i-person" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/></symbol>
+    <symbol id="i-badge" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="3"/><circle cx="9" cy="11" r="2"/><path d="M6.5 16c.6-1.4 1.6-2 2.5-2s1.9.6 2.5 2M14 10h4M14 14h3"/></symbol>
+    <symbol id="i-upload" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8l-5-5Z"/><path d="M14 3v5h5M12 17v-5m0 0-2.5 2.5M12 12l2.5 2.5"/></symbol>
+  </defs>
+</svg>
 
-  <div id="loader" class="card">
-    <div id="drop" tabindex="0">
-      <b>فایل اکسل (xlsx) یا CSV را اینجا بکشید یا کلیک کنید</b>
-      <span>ستون‌ها: نام، نام خانوادگی، شماره موبایل، شماره عضویت، رشته</span>
+<div class="wrap">
+
+  <!-- ===== loader ===== -->
+  <div id="loader">
+    <div class="top"><span></span></div>
+    <h1>دیتابیس مهندسین</h1>
+    <div id="drop" class="drop" tabindex="0">
+      <svg><use href="#i-upload"/></svg>
+      <b>انتخاب فایل اکسل</b>
+      <span>xlsx یا CSV · ستون‌ها: نام، نام خانوادگی، شماره موبایل، شماره عضویت، رشته</span>
     </div>
     <input id="file" type="file" accept=".xlsx,.xls,.csv" class="hidden">
-    <div class="privacy">🔒 فایل فقط داخل مرورگر شما خوانده می‌شود و جایی آپلود نمی‌شود.</div>
-    <div id="loadmsg" class="sub" style="margin:8px 0 0"></div>
+    <div class="lock">🔒 فایل فقط داخل مرورگر خودت خوانده می‌شود و جایی آپلود نمی‌شود.</div>
+    <div id="loadmsg" class="msg"></div>
   </div>
 
+  <!-- ===== app ===== -->
   <div id="app" class="hidden">
-    <div class="card">
-      <div class="bar">
-        <input id="q" type="search" placeholder="جستجوی نام، فامیلی، شماره موبایل یا شماره عضویت…">
-        <select id="field"><option value="">همه‌ی رشته‌ها</option></select>
-        <label class="chk"><input id="onlyName" type="checkbox"> فقط دارای نام</label>
-        <label class="chk"><input id="onlyMember" type="checkbox"> فقط دارای شماره عضویت</label>
+    <div class="top">
+      <div class="navpill">
+        <button id="back" aria-label="بازگشت"><svg style="transform:scaleX(-1)"><use href="#i-chev"/></svg></button>
+        <button id="fwd" aria-label="جلو"><svg><use href="#i-chev"/></svg></button>
       </div>
-      <div class="bar" style="margin-top:10px">
-        <button id="csv" class="ghost">خروجی CSV نتایج</button>
-        <button id="copy" class="ghost">کپی شماره‌ها</button>
-        <span style="flex:1"></span>
-        <button id="change" class="ghost">فایل دیگر</button>
-        <button id="wipe" class="danger">پاک‌کردن دیتا از این مرورگر</button>
+      <button id="more" class="pill-btn" aria-label="مرتب‌سازی"><svg><use href="#i-dots"/></svg></button>
+    </div>
+    <h1 id="title">مرور</h1>
+
+    <div id="searchbar" class="search">
+      <svg><use href="#i-search"/></svg>
+      <input id="q" type="search" placeholder="جستجو" enterkeyhint="search" autocomplete="off">
+      <button id="clear" class="x hidden" aria-label="پاک کردن">✕</button>
+    </div>
+
+    <!-- Browse -->
+    <section id="v-browse">
+      <div class="sec"><span>فیلتر سریع</span><svg><use href="#i-down"/></svg></div>
+      <div class="group">
+        <label class="row plain"><span class="ic"><svg><use href="#i-person"/></svg></span><span class="t"><b>فقط دارای نام</b></span>
+          <span class="sw"><input id="onlyName" type="checkbox"><i></i></span></label>
+        <label class="row plain"><span class="ic"><svg><use href="#i-badge"/></svg></span><span class="t"><b>فقط دارای شماره عضویت</b></span>
+          <span class="sw"><input id="onlyMember" type="checkbox"><i></i></span></label>
       </div>
-    </div>
-    <div id="stats" class="stats"></div>
-    <div class="tw"><table>
-      <thead><tr>
-        <th data-k="first">نام</th><th data-k="last" class="sorted">نام خانوادگی</th>
-        <th data-k="phone">شماره موبایل</th><th data-k="member">شماره عضویت</th><th data-k="field">رشته</th>
-      </tr></thead>
-      <tbody id="rows"></tbody>
-    </table></div>
-    <div class="pager">
-      <button id="prev" class="ghost">قبلی</button>
-      <span>صفحه <input id="pg" type="number" min="1"> از <span id="pages"></span></span>
-      <button id="next" class="ghost">بعدی</button>
-    </div>
+
+      <div class="sec"><span>رشته‌ها</span><svg><use href="#i-down"/></svg></div>
+      <div class="group" id="fieldList"></div>
+    </section>
+
+    <!-- Results -->
+    <section id="v-results" class="hidden">
+      <div id="chips" class="chips"></div>
+      <div id="stats" class="stats"></div>
+      <div id="list" class="group"></div>
+      <button id="moreBtn" class="more hidden">نمایش بیشتر</button>
+    </section>
+
+    <!-- File -->
+    <section id="v-file" class="hidden">
+      <div class="sec"><span>خروجی</span><svg><use href="#i-down"/></svg></div>
+      <div class="group">
+        <button id="csv" class="row plain"><span class="ic"><svg><use href="#i-share"/></svg></span><span class="t"><b>خروجی CSV</b><small id="csvSub"></small></span><svg class="chev"><use href="#i-chev"/></svg></button>
+        <button id="copy" class="row plain"><span class="ic"><svg><use href="#i-copy"/></svg></span><span class="t"><b>کپی شماره‌ها</b><small id="copySub"></small></span><svg class="chev"><use href="#i-chev"/></svg></button>
+      </div>
+      <div class="sec"><span>فایل</span><svg><use href="#i-down"/></svg></div>
+      <div class="group">
+        <button id="change" class="row plain"><span class="ic"><svg><use href="#i-swap"/></svg></span><span class="t"><b>انتخاب فایل دیگر</b><small id="fileSub"></small></span><svg class="chev"><use href="#i-chev"/></svg></button>
+        <button id="wipe" class="row plain danger"><span class="ic"><svg><use href="#i-trash"/></svg></span><span class="t"><b>پاک‌کردن دیتا از این مرورگر</b></span></button>
+      </div>
+    </section>
+
+    <nav class="tabs">
+      <button data-tab="browse" class="on"><svg><use href="#i-folder"/></svg>مرور</button>
+      <button data-tab="results"><svg><use href="#i-list"/></svg>نتایج</button>
+      <button data-tab="file"><svg><use href="#i-doc"/></svg>فایل</button>
+    </nav>
   </div>
 </div>
+
+<div id="scrim" class="scrim"></div>
+<div id="sheet" class="sheet"></div>
 <div id="toast" class="toast"></div>
 
 <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
 <script>
 (()=>{
 const $=id=>document.getElementById(id);
-const PAGE=100;
-let ALL=[],view=[],page=1,sortKey='last',sortAsc=true;
+const STEP=50;
+const COLORS={'برق':'#ff9f0a','مکانیک':'#ff453a','معماری':'#bf5af2','عمران':'#0a84ff','نقشه برداری':'#30d158','شهرسازی':'#40c8e0','ترافیک':'#ffd60a'};
 const collator=new Intl.Collator('fa',{sensitivity:'base',numeric:true});
+let ALL=[],view=[],shown=STEP;
+let st={tab:'browse',q:'',field:'',onlyName:false,onlyMember:false,sortKey:'last',sortAsc:true};
+const hist=[];let hpos=-1;
 
 // ---------- helpers ----------
 const FA2EN=s=>String(s).replace(/[۰-۹]/g,d=>'۰۱۲۳۴۵۶۷۸۹'.indexOf(d)).replace(/[٠-٩]/g,d=>'٠١٢٣٤٥٦٧٨٩'.indexOf(d));
 const norm=s=>FA2EN(s==null?'':s).replace(/ك/g,'ک').replace(/ي/g,'ی').replace(/[\u200c\u200f\u200e]/g,' ').replace(/\s+/g,' ').trim().toLowerCase();
-const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
-function toast(t){const e=$('toast');e.textContent=t;e.classList.add('show');setTimeout(()=>e.classList.remove('show'),1800)}
+const esc=s=>String(s==null?'':s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const fa=n=>Number(n).toLocaleString('fa');
+const colorOf=f=>{if(COLORS[f])return COLORS[f];let h=0;for(const c of f)h=(h*31+c.charCodeAt(0))%360;return `hsl(${h} 60% 55%)`};
+function toast(t){const e=$('toast');e.textContent=t;e.classList.add('show');setTimeout(()=>e.classList.remove('show'),1700)}
+const ic=(n,cls='')=>`<svg class="${cls}"><use href="#i-${n}"/></svg>`;
 
 // ---------- IndexedDB (data stays on this device only) ----------
 const DB={
   open(){return new Promise((res,rej)=>{const r=indexedDB.open('engdb',1);r.onupgradeneeded=()=>r.result.createObjectStore('kv');r.onsuccess=()=>res(r.result);r.onerror=()=>rej(r.error)})},
-  async get(){try{const d=await this.open();return await new Promise(res=>{const q=d.transaction('kv').objectStore('kv').get('rows');q.onsuccess=()=>res(q.result);q.onerror=()=>res(null)})}catch{return null}},
-  async set(v){try{const d=await this.open();await new Promise(res=>{const t=d.transaction('kv','readwrite');t.objectStore('kv').put(v,'rows');t.oncomplete=res;t.onerror=res})}catch{}},
+  async get(k){try{const d=await this.open();return await new Promise(res=>{const q=d.transaction('kv').objectStore('kv').get(k);q.onsuccess=()=>res(q.result);q.onerror=()=>res(null)})}catch{return null}},
+  async set(k,v){try{const d=await this.open();await new Promise(res=>{const t=d.transaction('kv','readwrite');t.objectStore('kv').put(v,k);t.oncomplete=res;t.onerror=res})}catch{}},
   async clear(){try{const d=await this.open();await new Promise(res=>{const t=d.transaction('kv','readwrite');t.objectStore('kv').clear();t.oncomplete=res;t.onerror=res})}catch{}}
 };
 
 // ---------- file parsing ----------
-const COLS={first:['نام'],last:['نام خانوادگی','فامیلی','نام خانوادگي'],phone:['شماره موبایل','موبایل','شماره تماس','تلفن همراه'],member:['شماره عضویت','کد عضویت'],field:['رشته']};
+const COLS={first:['نام'],last:['نام خانوادگی','فامیلی'],phone:['شماره موبایل','موبایل','شماره تماس','تلفن همراه'],member:['شماره عضویت','کد عضویت'],field:['رشته']};
 function parseSheet(rows){
   if(!rows.length) return [];
   const head=rows[0].map(h=>norm(h));
@@ -151,76 +283,152 @@ async function readFile(file){
     const rows=XLSX.utils.sheet_to_json(ws,{header:1,raw:true,defval:''});
     const data=parseSheet(rows);
     if(!data.length) throw new Error('هیچ ردیفی پیدا نشد.');
-    await DB.set(data);
-    start(data);
+    await DB.set('rows',data);await DB.set('name',file.name);
+    start(data,file.name);
   }catch(e){$('loadmsg').textContent='خطا: '+e.message}
 }
 
 // ---------- app ----------
-function start(data){
+let FIELDS=[];
+function start(data,fname){
   ALL=data.map(o=>({...o,_s:norm([o.first,o.last,o.member].join(' '))+' '+FA2EN(o.phone).replace(/\D/g,'').replace(/^0/,'')+' '+FA2EN(o.phone).replace(/\D/g,''),_f:o.field?o.field.split(/[،,]/).map(x=>x.trim()).filter(Boolean):[]}));
-  const fs=new Set();ALL.forEach(o=>o._f.forEach(f=>fs.add(f)));
-  const sel=$('field');sel.innerHTML='<option value="">همه‌ی رشته‌ها</option>'+[...fs].sort(collator.compare).map(f=>`<option>${esc(f)}</option>`).join('');
+  const m=new Map();ALL.forEach(o=>o._f.forEach(f=>m.set(f,(m.get(f)||0)+1)));
+  FIELDS=[...m].sort((a,b)=>b[1]-a[1]);
+  $('fileSub').textContent=(fname?fname+' · ':'')+fa(ALL.length)+' ردیف';
   $('loader').classList.add('hidden');$('app').classList.remove('hidden');
-  apply(true);
+  renderFields();go('browse',true);
 }
-function apply(resetPage){
-  const q=norm($('q').value),qd=FA2EN($('q').value).replace(/\D/g,'').replace(/^0/,'');
-  const fld=$('field').value,oN=$('onlyName').checked,oM=$('onlyMember').checked;
-  const terms=q.split(' ').filter(Boolean);
+function renderFields(){
+  $('fieldList').innerHTML=
+   `<button class="row" data-f=""><span class="dot ring"></span><span class="t"><b>همه</b></span><span class="cnt">${fa(ALL.length)}</span>${ic('chev','chev')}</button>`+
+   FIELDS.map(([f,n])=>`<button class="row" data-f="${esc(f)}"><span class="dot" style="background:${colorOf(f)}"></span><span class="t"><b>${esc(f)}</b></span><span class="cnt">${fa(n)}</span>${ic('chev','chev')}</button>`).join('');
+}
+
+function compute(){
+  const terms=norm(st.q).split(' ').filter(Boolean);
   view=ALL.filter(o=>{
-    if(fld&&!o._f.includes(fld))return false;
-    if(oN&&!(o.first||o.last))return false;
-    if(oM&&!o.member)return false;
+    if(st.field&&!o._f.includes(st.field))return false;
+    if(st.onlyName&&!(o.first||o.last))return false;
+    if(st.onlyMember&&!o.member)return false;
     for(const t of terms){if(!o._s.includes(t))return false}
     return true;
   });
-  const k=sortKey,dir=sortAsc?1:-1;
+  const k=st.sortKey,dir=st.sortAsc?1:-1;
   view.sort((a,b)=>{
     const ea=!a[k],eb=!b[k];
-    if(ea!==eb)return ea?1:-1;           // empty values always last
+    if(ea!==eb)return ea?1:-1;
     let c=collator.compare(a[k],b[k]);
     if(!c&&k==='last')c=collator.compare(a.first,b.first);
     return c*dir;
   });
-  if(resetPage)page=1;
-  render(terms,qd);
+  return terms;
 }
 function hl(text,terms){
   let s=esc(text);if(!terms.length||!text)return s;
   for(const t of terms){if(t.length<2)continue;try{s=s.replace(new RegExp('('+t.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')+')','gi'),'<mark>$1</mark>')}catch{}}
   return s;
 }
-function render(terms){
-  const pages=Math.max(1,Math.ceil(view.length/PAGE));
-  page=Math.min(Math.max(1,page),pages);
-  const slice=view.slice((page-1)*PAGE,page*PAGE);
-  $('rows').innerHTML=slice.map(o=>{
-    const ph=o.phone?`<a href="tel:${esc(o.phone)}">${esc(o.phone)}</a>`:'';
-    const cell=(v,h)=>v?(h?hl(v,terms):esc(v)):'';
-    return `<tr><td>${cell(o.first,1)}</td><td>${cell(o.last,1)}</td><td class="num">${ph}</td><td class="num">${esc(o.member)}</td><td>${esc(o.field)}</td></tr>`;
-  }).join('')||'<tr><td colspan="5" class="empty" style="text-align:center;padding:30px">نتیجه‌ای پیدا نشد</td></tr>';
-  $('stats').textContent=`${view.length.toLocaleString('fa')} نتیجه از ${ALL.length.toLocaleString('fa')} ردیف`;
-  $('pg').value=page;$('pages').textContent=pages.toLocaleString('fa');
-  $('prev').disabled=page<=1;$('next').disabled=page>=pages;
-  document.querySelectorAll('th').forEach(th=>{th.classList.toggle('sorted',th.dataset.k===sortKey);th.classList.toggle('asc',th.dataset.k===sortKey&&sortAsc)});
+const initials=o=>{const t=((o.first||'')+' '+(o.last||'')).trim();return t?[...t.replace(/[^\p{L}\s]/gu,'')][0]||'؟':'؟'};
+function rowHTML(o,i,terms){
+  const f0=o._f[0]||'';
+  const name=(o.first||o.last)?hl((o.first+' '+o.last).trim(),terms):'<span class="nm">بدون نام</span>';
+  const sub=[o.phone,o.field].filter(Boolean).join(' · ');
+  return `<button class="row" data-i="${i}"><span class="av" style="background:${f0?colorOf(f0):'#636366'}">${esc(initials(o))}</span><span class="t"><b>${name}</b><small dir="auto">${esc(sub)}</small></span>${ic('chev','chev')}</button>`;
+}
+function renderResults(reset){
+  const terms=compute();
+  if(reset)shown=STEP;
+  $('list').innerHTML=view.slice(0,shown).map((o,i)=>rowHTML(o,i,terms)).join('')||'<div class="empty">نتیجه‌ای پیدا نشد</div>';
+  $('stats').textContent=`${fa(view.length)} نتیجه از ${fa(ALL.length)} ردیف`;
+  $('moreBtn').classList.toggle('hidden',shown>=view.length);
+  const ch=[];
+  if(st.field)ch.push(['field','رشته: '+st.field]);
+  if(st.onlyName)ch.push(['onlyName','فقط دارای نام']);
+  if(st.onlyMember)ch.push(['onlyMember','فقط دارای شماره عضویت']);
+  $('chips').innerHTML=ch.map(([k,t])=>`<span class="chip">${esc(t)}<b data-x="${k}">✕</b></span>`).join('');
+  $('csvSub').textContent=fa(view.length)+' ردیف از نتایج فعلی';
+  $('copySub').textContent=fa(view.filter(o=>o.phone).length)+' شماره از نتایج فعلی';
 }
 
-// ---------- events ----------
-let tm;$('q').addEventListener('input',()=>{clearTimeout(tm);tm=setTimeout(()=>apply(true),180)});
-['field','onlyName','onlyMember'].forEach(i=>$(i).addEventListener('change',()=>apply(true)));
-$('prev').onclick=()=>{page--;apply()};$('next').onclick=()=>{page++;apply()};
-$('pg').onchange=e=>{page=parseInt(e.target.value)||1;apply()};
-document.querySelectorAll('th').forEach(th=>th.onclick=()=>{
-  const k=th.dataset.k;if(sortKey===k)sortAsc=!sortAsc;else{sortKey=k;sortAsc=true}apply(true)});
-$('drop').onclick=()=>$('file').click();
-$('drop').onkeydown=e=>{if(e.key==='Enter'||e.key===' ')$('file').click()};
-$('file').onchange=e=>e.target.files[0]&&readFile(e.target.files[0]);
-['dragover','dragenter'].forEach(ev=>$('drop').addEventListener(ev,e=>{e.preventDefault();$('drop').classList.add('over')}));
-['dragleave','drop'].forEach(ev=>$('drop').addEventListener(ev,e=>{e.preventDefault();$('drop').classList.remove('over')}));
-$('drop').addEventListener('drop',e=>{const f=e.dataTransfer.files[0];f&&readFile(f)});
-$('change').onclick=()=>{$('app').classList.add('hidden');$('loader').classList.remove('hidden');$('loadmsg').textContent=''};
-$('wipe').onclick=async()=>{if(confirm('دیتای ذخیره‌شده در این مرورگر پاک شود؟')){await DB.clear();ALL=[];view=[];$('app').classList.add('hidden');$('loader').classList.remove('hidden');$('loadmsg').textContent='دیتا پاک شد.'}};
+// ---------- navigation ----------
+const TITLES={browse:'مرور',results:'نتایج',file:'فایل'};
+function go(tab,silent){
+  st.tab=tab;
+  for(const t of ['browse','results','file'])$('v-'+t).classList.toggle('hidden',t!==tab);
+  document.querySelectorAll('.tabs button').forEach(b=>b.classList.toggle('on',b.dataset.tab===tab));
+  $('title').textContent=TITLES[tab];
+  $('searchbar').classList.toggle('hidden',tab==='file');
+  $('more').classList.toggle('hidden',tab!=='results');
+  if(tab==='results')renderResults(true);
+  if(tab==='browse'||tab==='file'){ if(tab==='file')renderResults(false) }
+  if(!silent){hist.length=hpos+1;hist.push(tab);hpos=hist.length-1}
+  else if(!hist.length){hist.push(tab);hpos=0}
+  $('back').disabled=hpos<=0;$('fwd').disabled=hpos>=hist.length-1;
+  window.scrollTo({top:0});
+}
+$('back').onclick=()=>{if(hpos>0){hpos--;go(hist[hpos],true)}};
+$('fwd').onclick=()=>{if(hpos<hist.length-1){hpos++;go(hist[hpos],true)}};
+document.querySelectorAll('.tabs button').forEach(b=>b.onclick=()=>go(b.dataset.tab));
+
+// search
+let tm;
+$('q').addEventListener('input',()=>{
+  st.q=$('q').value;$('clear').classList.toggle('hidden',!st.q);
+  clearTimeout(tm);tm=setTimeout(()=>{
+    if(st.tab!=='results'){if(st.q)go('results');}
+    else renderResults(true);
+  },180);
+});
+$('clear').onclick=()=>{$('q').value='';st.q='';$('clear').classList.add('hidden');if(st.tab==='results')renderResults(true);$('q').focus()};
+
+// browse
+$('fieldList').onclick=e=>{const b=e.target.closest('[data-f]');if(!b)return;st.field=b.dataset.f;go('results')};
+$('onlyName').onchange=e=>{st.onlyName=e.target.checked;if(st.tab==='results')renderResults(true)};
+$('onlyMember').onchange=e=>{st.onlyMember=e.target.checked;if(st.tab==='results')renderResults(true)};
+$('chips').onclick=e=>{
+  const x=e.target.closest('[data-x]');if(!x)return;const k=x.dataset.x;
+  if(k==='field')st.field='';else{st[k]=false;$(k).checked=false}
+  renderResults(true);
+};
+$('moreBtn').onclick=()=>{shown+=STEP;renderResults(false)};
+if('IntersectionObserver' in window)new IntersectionObserver(es=>{if(es[0].isIntersecting&&!$('moreBtn').classList.contains('hidden')){shown+=STEP;renderResults(false)}},{rootMargin:'400px'}).observe($('moreBtn'));
+
+// ---------- sheets ----------
+function openSheet(html){$('sheet').innerHTML='<div class="grab"></div>'+html;$('sheet').classList.add('on');$('scrim').classList.add('on')}
+function closeSheet(){$('sheet').classList.remove('on');$('scrim').classList.remove('on')}
+$('scrim').onclick=closeSheet;
+
+const SORTS=[['last','نام خانوادگی'],['first','نام'],['phone','شماره موبایل'],['member','شماره عضویت'],['field','رشته']];
+$('more').onclick=()=>{
+  openSheet('<div style="font-weight:700;font-size:20px;margin:0 8px 6px">مرتب‌سازی</div>'+
+    SORTS.map(([k,t])=>`<button class="opt" data-s="${k}"><span>${t}</span>${st.sortKey===k?`<em>${st.sortAsc?'الف ← ی':'ی ← الف'}</em>`:''}</button>`).join(''));
+};
+$('sheet').addEventListener('click',e=>{
+  const s=e.target.closest('[data-s]');
+  if(s){const k=s.dataset.s;if(st.sortKey===k)st.sortAsc=!st.sortAsc;else{st.sortKey=k;st.sortAsc=true}closeSheet();renderResults(true)}
+});
+$('list').onclick=e=>{
+  const b=e.target.closest('[data-i]');if(!b)return;
+  const o=view[+b.dataset.i];if(!o)return;
+  const f0=o._f[0]||'';
+  const nm=(o.first+' '+o.last).trim();
+  openSheet(`<div class="av" style="background:${f0?colorOf(f0):'#636366'}">${esc(initials(o))}</div>
+    <h2>${nm?esc(nm):'<span class="nm">بدون نام</span>'}</h2><div class="sub">${esc(o.field||'—')}</div>
+    <div class="acts">
+      ${o.phone?`<a href="tel:${esc(o.phone)}">${ic('phone')}تماس</a><a href="sms:${esc(o.phone)}">${ic('msg')}پیامک</a><button data-copy="${esc(o.phone)}">${ic('copy')}کپی شماره</button>`:''}
+    </div>
+    <div class="kv">
+      <div><span>شماره موبایل</span><b>${esc(o.phone||'—')}</b></div>
+      <div><span>شماره عضویت</span><b>${esc(o.member||'—')}</b></div>
+      <div><span>رشته</span><b class="rtl">${esc(o.field||'—')}</b></div>
+    </div>`);
+};
+$('sheet').addEventListener('click',async e=>{
+  const c=e.target.closest('[data-copy]');
+  if(c){try{await navigator.clipboard.writeText(c.dataset.copy);toast('شماره کپی شد')}catch{toast('کپی ممکن نشد')}closeSheet()}
+});
+
+// ---------- file actions ----------
 $('csv').onclick=()=>{
   const q=s=>'"'+String(s||'').replace(/"/g,'""')+'"';
   const lines=['نام,نام خانوادگی,شماره موبایل,شماره عضویت,رشته'].concat(view.map(o=>[o.first,o.last,o.phone,o.member,o.field].map(q).join(',')));
@@ -229,11 +437,25 @@ $('csv').onclick=()=>{
 };
 $('copy').onclick=async()=>{
   const t=view.map(o=>o.phone).filter(Boolean).join('\n');
-  try{await navigator.clipboard.writeText(t);toast(view.length.toLocaleString('fa')+' شماره کپی شد')}catch{toast('کپی ممکن نشد')}
+  try{await navigator.clipboard.writeText(t);toast(fa(view.filter(o=>o.phone).length)+' شماره کپی شد')}catch{toast('کپی ممکن نشد')}
+};
+$('change').onclick=()=>{$('app').classList.add('hidden');$('loader').classList.remove('hidden');$('loadmsg').textContent=''};
+$('wipe').onclick=async()=>{
+  if(!confirm('دیتای ذخیره‌شده در این مرورگر پاک شود؟'))return;
+  await DB.clear();ALL=[];view=[];
+  $('app').classList.add('hidden');$('loader').classList.remove('hidden');$('loadmsg').textContent='دیتا پاک شد.';
 };
 
+// ---------- loader events ----------
+$('drop').onclick=()=>$('file').click();
+$('drop').onkeydown=e=>{if(e.key==='Enter'||e.key===' ')$('file').click()};
+$('file').onchange=e=>e.target.files[0]&&readFile(e.target.files[0]);
+['dragover','dragenter'].forEach(ev=>$('drop').addEventListener(ev,e=>{e.preventDefault();$('drop').classList.add('over')}));
+['dragleave','drop'].forEach(ev=>$('drop').addEventListener(ev,e=>{e.preventDefault();$('drop').classList.remove('over')}));
+$('drop').addEventListener('drop',e=>{const f=e.dataTransfer.files[0];f&&readFile(f)});
+
 // auto-load previously imported data (stored on this device only)
-DB.get().then(d=>{if(d&&d.length)start(d)});
+(async()=>{const d=await DB.get('rows');if(d&&d.length)start(d,await DB.get('name'))})();
 })();
 </script>
 </body>
