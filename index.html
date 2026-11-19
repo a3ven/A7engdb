@@ -1,0 +1,240 @@
+<!doctype html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>دیتابیس مهندسین</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/rastikerdar/vazirmatn@v33.003/Vazirmatn-font-face.css">
+<style>
+:root{
+  --bg:#f5f7fa;--card:#fff;--ink:#17212b;--muted:#6b7785;--line:#e3e8ee;
+  --brand:#1f6feb;--brand-ink:#fff;--soft:#eaf2ff;--ok:#1a7f4b;--danger:#c93c3c;
+}
+@media (prefers-color-scheme:dark){
+  :root{--bg:#0f141a;--card:#171e26;--ink:#e8edf2;--muted:#8a97a5;--line:#27303a;--soft:#16263d;--brand:#4c8dff}
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:Vazirmatn,Tahoma,system-ui,sans-serif;font-size:15px;line-height:1.7}
+.wrap{max-width:1100px;margin:0 auto;padding:16px}
+h1{font-size:20px;margin:8px 0 2px}
+.sub{color:var(--muted);font-size:13px;margin-bottom:14px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:14px;margin-bottom:12px}
+#drop{border:2px dashed var(--line);border-radius:14px;padding:34px 16px;text-align:center;cursor:pointer;transition:.15s}
+#drop.over,#drop:hover{border-color:var(--brand);background:var(--soft)}
+#drop b{display:block;font-size:16px;margin-bottom:4px}
+#drop span{color:var(--muted);font-size:13px}
+.privacy{color:var(--ok);font-size:12.5px;margin-top:10px}
+button,select,input{font:inherit;color:inherit}
+button{background:var(--brand);color:var(--brand-ink);border:0;border-radius:10px;padding:8px 14px;cursor:pointer}
+button.ghost{background:transparent;color:var(--ink);border:1px solid var(--line)}
+button.danger{background:transparent;color:var(--danger);border:1px solid var(--line)}
+button:disabled{opacity:.4;cursor:default}
+input[type=search],select{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:8px 12px;min-width:0}
+input[type=search]{flex:1 1 240px}
+.bar{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.chk{display:flex;gap:6px;align-items:center;color:var(--muted);font-size:13px;white-space:nowrap}
+.stats{color:var(--muted);font-size:13px;margin:10px 2px}
+.tw{overflow-x:auto;border:1px solid var(--line);border-radius:12px;background:var(--card)}
+table{border-collapse:collapse;width:100%;min-width:640px}
+th,td{padding:9px 12px;text-align:right;border-bottom:1px solid var(--line);white-space:nowrap}
+th{position:sticky;top:0;background:var(--soft);font-weight:600;font-size:13px;cursor:pointer;user-select:none}
+th.sorted::after{content:" ▾"} th.sorted.asc::after{content:" ▴"}
+tr:last-child td{border-bottom:0}
+td.num{direction:ltr;text-align:right;font-variant-numeric:tabular-nums}
+td a{color:var(--brand);text-decoration:none}
+td.empty{color:var(--muted)}
+mark{background:#ffe08a;color:#000;border-radius:3px;padding:0 1px}
+.pager{display:flex;gap:8px;justify-content:center;align-items:center;margin:14px 0;flex-wrap:wrap}
+.pager input{width:70px;text-align:center;padding:6px;border:1px solid var(--line);border-radius:8px;background:var(--card)}
+.hidden{display:none!important}
+.toast{position:fixed;bottom:18px;left:50%;transform:translateX(-50%);background:#17212b;color:#fff;padding:8px 16px;border-radius:999px;font-size:13px;opacity:0;transition:.2s;pointer-events:none}
+.toast.show{opacity:1}
+@media (max-width:600px){th,td{padding:8px}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>دیتابیس مهندسین</h1>
+  <div class="sub">جستجو، فیلتر و خروجی گرفتن از فایل اکسل دیتابیس</div>
+
+  <div id="loader" class="card">
+    <div id="drop" tabindex="0">
+      <b>فایل اکسل (xlsx) یا CSV را اینجا بکشید یا کلیک کنید</b>
+      <span>ستون‌ها: نام، نام خانوادگی، شماره موبایل، شماره عضویت، رشته</span>
+    </div>
+    <input id="file" type="file" accept=".xlsx,.xls,.csv" class="hidden">
+    <div class="privacy">🔒 فایل فقط داخل مرورگر شما خوانده می‌شود و جایی آپلود نمی‌شود.</div>
+    <div id="loadmsg" class="sub" style="margin:8px 0 0"></div>
+  </div>
+
+  <div id="app" class="hidden">
+    <div class="card">
+      <div class="bar">
+        <input id="q" type="search" placeholder="جستجوی نام، فامیلی، شماره موبایل یا شماره عضویت…">
+        <select id="field"><option value="">همه‌ی رشته‌ها</option></select>
+        <label class="chk"><input id="onlyName" type="checkbox"> فقط دارای نام</label>
+        <label class="chk"><input id="onlyMember" type="checkbox"> فقط دارای شماره عضویت</label>
+      </div>
+      <div class="bar" style="margin-top:10px">
+        <button id="csv" class="ghost">خروجی CSV نتایج</button>
+        <button id="copy" class="ghost">کپی شماره‌ها</button>
+        <span style="flex:1"></span>
+        <button id="change" class="ghost">فایل دیگر</button>
+        <button id="wipe" class="danger">پاک‌کردن دیتا از این مرورگر</button>
+      </div>
+    </div>
+    <div id="stats" class="stats"></div>
+    <div class="tw"><table>
+      <thead><tr>
+        <th data-k="first">نام</th><th data-k="last" class="sorted">نام خانوادگی</th>
+        <th data-k="phone">شماره موبایل</th><th data-k="member">شماره عضویت</th><th data-k="field">رشته</th>
+      </tr></thead>
+      <tbody id="rows"></tbody>
+    </table></div>
+    <div class="pager">
+      <button id="prev" class="ghost">قبلی</button>
+      <span>صفحه <input id="pg" type="number" min="1"> از <span id="pages"></span></span>
+      <button id="next" class="ghost">بعدی</button>
+    </div>
+  </div>
+</div>
+<div id="toast" class="toast"></div>
+
+<script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+<script>
+(()=>{
+const $=id=>document.getElementById(id);
+const PAGE=100;
+let ALL=[],view=[],page=1,sortKey='last',sortAsc=true;
+const collator=new Intl.Collator('fa',{sensitivity:'base',numeric:true});
+
+// ---------- helpers ----------
+const FA2EN=s=>String(s).replace(/[۰-۹]/g,d=>'۰۱۲۳۴۵۶۷۸۹'.indexOf(d)).replace(/[٠-٩]/g,d=>'٠١٢٣٤٥٦٧٨٩'.indexOf(d));
+const norm=s=>FA2EN(s==null?'':s).replace(/ك/g,'ک').replace(/ي/g,'ی').replace(/[\u200c\u200f\u200e]/g,' ').replace(/\s+/g,' ').trim().toLowerCase();
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+function toast(t){const e=$('toast');e.textContent=t;e.classList.add('show');setTimeout(()=>e.classList.remove('show'),1800)}
+
+// ---------- IndexedDB (data stays on this device only) ----------
+const DB={
+  open(){return new Promise((res,rej)=>{const r=indexedDB.open('engdb',1);r.onupgradeneeded=()=>r.result.createObjectStore('kv');r.onsuccess=()=>res(r.result);r.onerror=()=>rej(r.error)})},
+  async get(){try{const d=await this.open();return await new Promise(res=>{const q=d.transaction('kv').objectStore('kv').get('rows');q.onsuccess=()=>res(q.result);q.onerror=()=>res(null)})}catch{return null}},
+  async set(v){try{const d=await this.open();await new Promise(res=>{const t=d.transaction('kv','readwrite');t.objectStore('kv').put(v,'rows');t.oncomplete=res;t.onerror=res})}catch{}},
+  async clear(){try{const d=await this.open();await new Promise(res=>{const t=d.transaction('kv','readwrite');t.objectStore('kv').clear();t.oncomplete=res;t.onerror=res})}catch{}}
+};
+
+// ---------- file parsing ----------
+const COLS={first:['نام'],last:['نام خانوادگی','فامیلی','نام خانوادگي'],phone:['شماره موبایل','موبایل','شماره تماس','تلفن همراه'],member:['شماره عضویت','کد عضویت'],field:['رشته']};
+function parseSheet(rows){
+  if(!rows.length) return [];
+  const head=rows[0].map(h=>norm(h));
+  const idx={};
+  for(const k in COLS){idx[k]=head.findIndex(h=>COLS[k].some(c=>h===norm(c)))}
+  if(idx.phone<0) throw new Error('ستون «شماره موبایل» پیدا نشد.');
+  const g=(r,k)=>idx[k]<0||r[idx[k]]==null?'':String(r[idx[k]]).trim();
+  const out=[];
+  for(let i=1;i<rows.length;i++){
+    const r=rows[i];
+    const o={first:g(r,'first'),last:g(r,'last'),phone:g(r,'phone'),member:g(r,'member'),field:g(r,'field')};
+    if(!(o.phone||o.first||o.last)) continue;
+    out.push(o);
+  }
+  return out;
+}
+async function readFile(file){
+  $('loadmsg').textContent='در حال خواندن فایل…';
+  await new Promise(r=>setTimeout(r,30));
+  try{
+    if(typeof XLSX==='undefined') throw new Error('کتابخانه‌ی خواندن اکسل بارگذاری نشد (اینترنت لازم است).');
+    const buf=await file.arrayBuffer();
+    const wb=XLSX.read(buf,{type:'array',raw:true,cellText:false});
+    const ws=wb.Sheets[wb.SheetNames[0]];
+    const rows=XLSX.utils.sheet_to_json(ws,{header:1,raw:true,defval:''});
+    const data=parseSheet(rows);
+    if(!data.length) throw new Error('هیچ ردیفی پیدا نشد.');
+    await DB.set(data);
+    start(data);
+  }catch(e){$('loadmsg').textContent='خطا: '+e.message}
+}
+
+// ---------- app ----------
+function start(data){
+  ALL=data.map(o=>({...o,_s:norm([o.first,o.last,o.member].join(' '))+' '+FA2EN(o.phone).replace(/\D/g,'').replace(/^0/,'')+' '+FA2EN(o.phone).replace(/\D/g,''),_f:o.field?o.field.split(/[،,]/).map(x=>x.trim()).filter(Boolean):[]}));
+  const fs=new Set();ALL.forEach(o=>o._f.forEach(f=>fs.add(f)));
+  const sel=$('field');sel.innerHTML='<option value="">همه‌ی رشته‌ها</option>'+[...fs].sort(collator.compare).map(f=>`<option>${esc(f)}</option>`).join('');
+  $('loader').classList.add('hidden');$('app').classList.remove('hidden');
+  apply(true);
+}
+function apply(resetPage){
+  const q=norm($('q').value),qd=FA2EN($('q').value).replace(/\D/g,'').replace(/^0/,'');
+  const fld=$('field').value,oN=$('onlyName').checked,oM=$('onlyMember').checked;
+  const terms=q.split(' ').filter(Boolean);
+  view=ALL.filter(o=>{
+    if(fld&&!o._f.includes(fld))return false;
+    if(oN&&!(o.first||o.last))return false;
+    if(oM&&!o.member)return false;
+    for(const t of terms){if(!o._s.includes(t))return false}
+    return true;
+  });
+  const k=sortKey,dir=sortAsc?1:-1;
+  view.sort((a,b)=>{
+    const ea=!a[k],eb=!b[k];
+    if(ea!==eb)return ea?1:-1;           // empty values always last
+    let c=collator.compare(a[k],b[k]);
+    if(!c&&k==='last')c=collator.compare(a.first,b.first);
+    return c*dir;
+  });
+  if(resetPage)page=1;
+  render(terms,qd);
+}
+function hl(text,terms){
+  let s=esc(text);if(!terms.length||!text)return s;
+  for(const t of terms){if(t.length<2)continue;try{s=s.replace(new RegExp('('+t.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')+')','gi'),'<mark>$1</mark>')}catch{}}
+  return s;
+}
+function render(terms){
+  const pages=Math.max(1,Math.ceil(view.length/PAGE));
+  page=Math.min(Math.max(1,page),pages);
+  const slice=view.slice((page-1)*PAGE,page*PAGE);
+  $('rows').innerHTML=slice.map(o=>{
+    const ph=o.phone?`<a href="tel:${esc(o.phone)}">${esc(o.phone)}</a>`:'';
+    const cell=(v,h)=>v?(h?hl(v,terms):esc(v)):'';
+    return `<tr><td>${cell(o.first,1)}</td><td>${cell(o.last,1)}</td><td class="num">${ph}</td><td class="num">${esc(o.member)}</td><td>${esc(o.field)}</td></tr>`;
+  }).join('')||'<tr><td colspan="5" class="empty" style="text-align:center;padding:30px">نتیجه‌ای پیدا نشد</td></tr>';
+  $('stats').textContent=`${view.length.toLocaleString('fa')} نتیجه از ${ALL.length.toLocaleString('fa')} ردیف`;
+  $('pg').value=page;$('pages').textContent=pages.toLocaleString('fa');
+  $('prev').disabled=page<=1;$('next').disabled=page>=pages;
+  document.querySelectorAll('th').forEach(th=>{th.classList.toggle('sorted',th.dataset.k===sortKey);th.classList.toggle('asc',th.dataset.k===sortKey&&sortAsc)});
+}
+
+// ---------- events ----------
+let tm;$('q').addEventListener('input',()=>{clearTimeout(tm);tm=setTimeout(()=>apply(true),180)});
+['field','onlyName','onlyMember'].forEach(i=>$(i).addEventListener('change',()=>apply(true)));
+$('prev').onclick=()=>{page--;apply()};$('next').onclick=()=>{page++;apply()};
+$('pg').onchange=e=>{page=parseInt(e.target.value)||1;apply()};
+document.querySelectorAll('th').forEach(th=>th.onclick=()=>{
+  const k=th.dataset.k;if(sortKey===k)sortAsc=!sortAsc;else{sortKey=k;sortAsc=true}apply(true)});
+$('drop').onclick=()=>$('file').click();
+$('drop').onkeydown=e=>{if(e.key==='Enter'||e.key===' ')$('file').click()};
+$('file').onchange=e=>e.target.files[0]&&readFile(e.target.files[0]);
+['dragover','dragenter'].forEach(ev=>$('drop').addEventListener(ev,e=>{e.preventDefault();$('drop').classList.add('over')}));
+['dragleave','drop'].forEach(ev=>$('drop').addEventListener(ev,e=>{e.preventDefault();$('drop').classList.remove('over')}));
+$('drop').addEventListener('drop',e=>{const f=e.dataTransfer.files[0];f&&readFile(f)});
+$('change').onclick=()=>{$('app').classList.add('hidden');$('loader').classList.remove('hidden');$('loadmsg').textContent=''};
+$('wipe').onclick=async()=>{if(confirm('دیتای ذخیره‌شده در این مرورگر پاک شود؟')){await DB.clear();ALL=[];view=[];$('app').classList.add('hidden');$('loader').classList.remove('hidden');$('loadmsg').textContent='دیتا پاک شد.'}};
+$('csv').onclick=()=>{
+  const q=s=>'"'+String(s||'').replace(/"/g,'""')+'"';
+  const lines=['نام,نام خانوادگی,شماره موبایل,شماره عضویت,رشته'].concat(view.map(o=>[o.first,o.last,o.phone,o.member,o.field].map(q).join(',')));
+  const a=document.createElement('a');a.href=URL.createObjectURL(new Blob(['\ufeff'+lines.join('\r\n')],{type:'text/csv;charset=utf-8'}));
+  a.download='نتایج.csv';a.click();setTimeout(()=>URL.revokeObjectURL(a.href),2000);
+};
+$('copy').onclick=async()=>{
+  const t=view.map(o=>o.phone).filter(Boolean).join('\n');
+  try{await navigator.clipboard.writeText(t);toast(view.length.toLocaleString('fa')+' شماره کپی شد')}catch{toast('کپی ممکن نشد')}
+};
+
+// auto-load previously imported data (stored on this device only)
+DB.get().then(d=>{if(d&&d.length)start(d)});
+})();
+</script>
+</body>
+</html>
